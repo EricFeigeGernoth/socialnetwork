@@ -2,13 +2,14 @@ import ReactDOM from "react-dom";
 
 // import Registration from "./registration";
 import Welcome from "./welcome";
+import Logo from "./logo";
 
 let elem;
 
 if (location.pathname === "/welcome") {
     elem = <Welcome />;
 } else {
-    elem = <p> your logo component should go here</p>;
+    elem = <Logo />;
 }
 
 ReactDOM.render(elem, document.querySelector("main"));

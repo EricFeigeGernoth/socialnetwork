@@ -1,3 +1,9 @@
 body {
     background-color: ghostwhite;
 }
+
+#logo {
+    height: 200px;
+    overflow: hidden;
+    object-fit: cover;
+}

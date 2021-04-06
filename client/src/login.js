@@ -1,8 +1,8 @@
-import axios from "./axios";
 import { Component } from "react";
+import axios from "./axios";
 import { Link } from "react-router-dom";
 
-export default class Registration extends Component {
+export default class Login extends Component {
     constructor() {
         super();
         this.state = {
@@ -12,16 +12,7 @@ export default class Registration extends Component {
         // this.handleChange = this.handleChange.bind(this);
     }
 
-    //What we need to do:
-    //1. render 4 input fields+button
-    // 2. capture the user input and store it somewhere
-    // 3. when user submits. send the data to the server
-    // if something goes wrong, condiditionally render an error message
-    // if everything goes to perfection, redirect the user '/'
-
     handleChange(e) {
-        // console.log("handleChange is running for every inputfield");
-        // console.log("handleChange e.target.value", e.target.value);
         this.setState(
             {
                 [e.target.name]: e.target.value,
@@ -33,12 +24,10 @@ export default class Registration extends Component {
     handleClick() {
         console.log("clicked the button");
         axios
-            .post("/register", this.state)
+            .post("/login", this.state)
             .then(({ data }) => {
                 console.log("data handleClick", data);
-                //TO DO:
-                //if everything went well, redirect the user to "/"
-                //if something went wrong, conditionally render an error message
+
                 console.log("data", data);
                 if (data.success) {
                     console.log("success");
@@ -56,23 +45,11 @@ export default class Registration extends Component {
     render() {
         return (
             <div>
-                <h1>This is our registration component</h1>
+                <h1>This is our Login component</h1>
 
                 {this.state.error && (
                     <p className="error">oops!!! something went wrong!!</p>
                 )}
-                <input
-                    type="text"
-                    name="first"
-                    placeholder="first"
-                    onChange={(e) => this.handleChange(e)}
-                ></input>
-                <input
-                    type="text"
-                    name="last"
-                    placeholder="last"
-                    onChange={(e) => this.handleChange(e)}
-                ></input>
                 <input
                     type="text"
                     name="email"
@@ -85,8 +62,9 @@ export default class Registration extends Component {
                     placeholder="password"
                     onChange={(e) => this.handleChange(e)}
                 ></input>
-                <button onClick={() => this.handleClick()}>register</button>
-                <Link to="/login">Click to go to Login</Link>
+                <button onClick={() => this.handleClick()}>login</button>
+
+                <Link to="/">Click to go to Registration</Link>
             </div>
         );
     }
