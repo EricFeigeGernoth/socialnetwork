@@ -7,3 +7,33 @@ body {
     overflow: hidden;
     object-fit: cover;
 }
+
+#profile {
+    border: black 2px solid;
+    background-color: aqua;
+    height: 300px;
+    width: 300px;
+}
+
+#profilepicture {
+    height: 100px;
+    position: relative;
+}
+
+#uploadsection {
+    height: 200px;
+    width: 400px;
+    background-color: blueviolet;
+}
+
+#main_profile {
+    width: 1000px;
+    height: 1000px;
+    background-color: lightskyblue;
+}
+
+#bio-editor {
+    width: 400px;
+    height: 400px;
+    background-color: coral;
+}

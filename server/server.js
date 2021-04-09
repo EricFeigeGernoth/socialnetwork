@@ -4,7 +4,8 @@ const compression = require("compression");
 const path = require("path");
 const csurf = require("csurf");
 const cryptoRandomString = require("crypto-random-string");
-
+const s3 = require("./s3.js");
+const { s3Url } = require("./s3urlconfig.json");
 const cookieSession = require("cookie-session");
 const { hash, compare } = require("./bc.js");
 const {
@@ -13,8 +14,34 @@ const {
     resetInsert,
     getResetCode,
     updatePassword,
+    getUserProfile,
+    updateProfilePic,
+    updateBio,
 } = require("./db.js");
 const { sendEmail } = require("./ses.js");
+
+//MULTER//** Do not touch this code **//
+const multer = require("multer");
+const uidSafe = require("uid-safe");
+
+const diskStorage = multer.diskStorage({
+    destination: function (req, file, callback) {
+        callback(null, __dirname + "/uploads");
+    },
+    filename: function (req, file, callback) {
+        uidSafe(24).then(function (uid) {
+            callback(null, uid + path.extname(file.originalname));
+        });
+    },
+});
+
+const uploader = multer({
+    storage: diskStorage,
+    limits: {
+        fileSize: 2097152,
+    },
+});
+//** Do not touch this code **//
 
 //MiddlewareMiddlewareMiddlewareMiddlewareMiddlewareMiddlewareMiddlewareMiddlewareMiddlewareMiddleware
 
@@ -55,12 +82,6 @@ app.post("/register", (req, res) => {
         // let hashedPassword = hash(password);
         // console.log(password);
         hash(password).then((hashedPassword) => {
-            // console.log("password: ", password);
-            // console.log("hashedPassword: ", hashedPassword);
-            // console.log("first", first);
-            // console.log("last", last);
-            // console.log("email", email);
-            // console.log("before user data");
             addSignInData(first, last, email, hashedPassword)
                 .then((usersData) => {
                     console.log("after user data");
@@ -131,6 +152,7 @@ app.post("/resetpassword", (req, res) => {
                         My dearest Anonymous, you requested to reset your password and we answer immediately. 
                         Your unique reset code is: ${secretCode}.
                         Please use this code to reset your password on the website.`;
+                        console.log("email console loggen", email);
                         sendEmail(email, body, subject).then(() => {
                             console.log("I have sent the email");
                             res.json({
@@ -190,13 +212,60 @@ app.post("/resetpassword/verify", (req, res) => {
             });
     }
 });
+
+app.get("/user", function (req, res) {
+    console.log("user route session.userId", req.session.userId);
+    getUserProfile(req.session.userId).then((resp) => {
+        console.log("resp from user:    ", resp);
+        return res.json(resp.rows[0]);
+    });
+});
+
+app.post("/upload", uploader.single("file"), s3.upload, (req, res) => {
+    console.log("Working");
+    console.log("req.body: ", req.body);
+    console.log("req.file: ", req.file);
+    let id = req.session.userId;
+    console.log(id);
+    if (req.file) {
+        console.log("I am in the if statement");
+        updateProfilePic(s3Url + req.file.filename, id)
+            .then((data) => {
+                // console.log("I am in dataaaaaaaaaa");
+                // console.log(data);
+                console.log("upload route data.rows[0]    ", data.rows[0]);
+                res.json(data.rows[0]);
+            })
+            .catch((err) => {
+                console.log("error at catching filename: ", err);
+            });
+    } else {
+        // this runs if something goes wrong along the way :(
+        res.json({
+            success: false,
+        });
+    }
+});
+
+app.post("/bioedit", (req, res) => {
+    // console.log("in server bio edit", req.body);
+    let bio = req.body.bioInfo;
+    // console.log(bio);
+    let id = req.session.userId;
+    // console.log(id);
+    updateBio(bio, id).then((data) => {
+        console.log("updateBio", data);
+        res.json(data.rows[0]);
+    });
+});
+
 //NEVER delete or you will see nothing
 app.get("*", function (req, res) {
-    // if (!req.session.userId) {
-    //     res.redirect("/welcome");
-    // } else {
-    res.sendFile(path.join(__dirname, "..", "client", "index.html"));
-    // }
+    if (!req.session.userId) {
+        res.redirect("/welcome");
+    } else {
+        res.sendFile(path.join(__dirname, "..", "client", "index.html"));
+    }
 });
 
 app.listen(process.env.PORT || 3001, function () {

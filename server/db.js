@@ -17,6 +17,35 @@ module.exports.getUser = function (email) {
     return db.query(`SELECT * FROM users WHERE email=$1`, [email]);
 };
 
+module.exports.getUserProfile = function (id) {
+    console.log("we are in getUserProfile");
+    return db.query(`SELECT * FROM users WHERE id=$1`, [id]);
+};
+
+module.exports.updateProfilePic = function (url, id) {
+    console.log("in db.js");
+    return db.query(
+        `
+    UPDATE users
+    SET profile_pic = $1
+    WHERE id = $2 RETURNING profile_pic, id`,
+        [url, id]
+    );
+};
+
+module.exports.updateBio = function (bio, id) {
+    console.log("in db.js");
+    return db.query(
+        `
+    UPDATE users
+    SET bio = $1
+    WHERE id = $2 RETURNING bio, id`,
+        [bio, id]
+    );
+};
+
+//Queries for email reset
+
 module.exports.resetInsert = function (email, code) {
     console.log("in db.js");
     return db.query(
