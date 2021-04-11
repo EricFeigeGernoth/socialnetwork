@@ -3,17 +3,16 @@ body {
 }
 
 #logo {
-    height: 200px;
+    height: 100px;
     overflow: hidden;
     object-fit: cover;
 }
 
-#profile {
+/* #profilePicSection {
     border: black 2px solid;
     background-color: aqua;
-    height: 300px;
-    width: 300px;
-}
+    display: inline;
+} */
 
 #profilepicture {
     height: 100px;
@@ -36,4 +35,10 @@ body {
     width: 400px;
     height: 400px;
     background-color: coral;
+}
+
+.head {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }

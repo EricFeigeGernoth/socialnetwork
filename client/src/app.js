@@ -2,13 +2,14 @@ import { Component } from "react";
 // Use the CSURF axios instance ;)
 import axios from "./axios";
 
-// import { BrowserRouter, Route } from "react-router-dom";
+import { BrowserRouter, Route } from "react-router-dom";
 
 // Those are from named exports, it will look differently if you have default exports ;)
 import Logo from "./components/logo";
 import ProfilePic from "./components/profile-pic.js";
 import { Uploader } from "./components/uploader.js";
 import Profile from "./components/profile.js";
+import OtherProfile from "./components/otherprofile";
 
 export class App extends Component {
     constructor(props) {
@@ -75,32 +76,55 @@ export class App extends Component {
     render() {
         return (
             <section id={"app"}>
-                <Logo />
-                <ProfilePic
-                    first={this.state.user.first}
-                    last={this.state.user.last}
-                    profile_pic={this.state.user.profile_pic}
-                    // You may want to shorten the 3 lines above with: {...this.state.user}
+                <div className="head">
+                    <Logo />
+                    <ProfilePic
+                        first={this.state.user.first}
+                        last={this.state.user.last}
+                        profile_pic={this.state.user.profile_pic}
+                        // You may want to shorten the 3 lines above with: {...this.state.user}
 
-                    // This method is bound in the constructor, so we're good!
-                    showUploader={this.showUploader}
-                />
+                        // This method is bound in the constructor, so we're good!
+                        showUploader={this.showUploader}
+                    />
+                </div>
 
-                {/* <BrowserRouter>
+                <BrowserRouter>
                     <div>
-                        <Route path="/" render={()=>{}}></Route>
-                        <Route path="/user/:id" component={OtherProfile}></Route>
+                        <Route
+                            exact
+                            path="/"
+                            render={() => (
+                                <Profile
+                                    first={this.state.user.first}
+                                    last={this.state.user.last}
+                                    profile_pic={this.state.user.profile_pic}
+                                    showUploader={this.showUploader}
+                                    setBio={this.setBio}
+                                    bio={this.state.user.bio}
+                                />
+                            )}
+                        />
+                        <Route
+                            path="/user/:id"
+                            render={(props) => (
+                                <OtherProfile
+                                    key={props.match.url}
+                                    match={props.match}
+                                    history={props.history}
+                                />
+                            )}
+                        />
                     </div>
-                </BrowserRouter> */}
-
-                <Profile
+                </BrowserRouter>
+                {/* <Profile
                     first={this.state.user.first}
                     last={this.state.user.last}
                     profile_pic={this.state.user.profile_pic}
                     showUploader={this.showUploader}
                     setBio={this.setBio}
                     bio={this.state.user.bio}
-                />
+                /> */}
 
                 {this.state.uploaderVisible && (
                     // Uploader will also need to be passed a method to be able to close itself ;)

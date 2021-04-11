@@ -214,7 +214,8 @@ app.post("/resetpassword/verify", (req, res) => {
 });
 
 app.get("/user", function (req, res) {
-    console.log("user route session.userId", req.session.userId);
+    console.log("Mounting ID Profile");
+    console.log("!!!!user route session.userId", req.session.userId);
     getUserProfile(req.session.userId).then((resp) => {
         console.log("resp from user:    ", resp);
         return res.json(resp.rows[0]);
@@ -259,6 +260,35 @@ app.post("/bioedit", (req, res) => {
     });
 });
 
+//Concerning other USERSConcerning other USERSConcerning other USERSConcerning other USERSConcerning other USERSConcerning other USERSConcerning other USERS
+
+app.get("/user/:id.json", function (req, res) {
+    // console.log("Hello before getUserProfile");
+
+    console.log("Before req.params.id as userId");
+    let id = req.session.userId;
+    console.log("session user id", req.session.userId);
+    console.log("user id in route user:id.json", req.params.id);
+    let userId = req.params.id;
+    console.log("user id in route user:id.json", userId);
+    if (id == userId) {
+        return res.json({ userIsViewingSelf: true });
+    } else {
+        getUserProfile(userId)
+            .then((resp) => {
+                // console.log("resp from user/idjson:    ", resp);
+                console.log("HELEOEOEHOE");
+                console.log("userId important route", resp.rows[0]);
+                return res.json(resp.rows[0]);
+            })
+            .catch((err) => {
+                console.log("error at catching filename: ", err);
+                return res.json({ invalid: true });
+            });
+    }
+});
+
+// Concerning other USERSConcerning other USERSConcerning other USERSConcerning other USERSConcerning other USERSConcerning other USERS
 //NEVER delete or you will see nothing
 app.get("*", function (req, res) {
     if (!req.session.userId) {
