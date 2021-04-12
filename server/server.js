@@ -17,6 +17,7 @@ const {
     getUserProfile,
     updateProfilePic,
     updateBio,
+    getNewUsers,
 } = require("./db.js");
 const { sendEmail } = require("./ses.js");
 
@@ -286,6 +287,13 @@ app.get("/user/:id.json", function (req, res) {
                 return res.json({ invalid: true });
             });
     }
+});
+
+app.get("/users", function (req, res) {
+    getNewUsers().then((data) => {
+        console.log(data);
+        return res.json(data.rows[0]);
+    });
 });
 
 // Concerning other USERSConcerning other USERSConcerning other USERSConcerning other USERSConcerning other USERSConcerning other USERS

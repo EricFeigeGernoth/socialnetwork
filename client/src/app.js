@@ -10,6 +10,7 @@ import ProfilePic from "./components/profile-pic.js";
 import { Uploader } from "./components/uploader.js";
 import Profile from "./components/profile.js";
 import OtherProfile from "./components/otherprofile";
+import FindPeople from "./components/findpeople";
 
 export class App extends Component {
     constructor(props) {
@@ -115,16 +116,9 @@ export class App extends Component {
                                 />
                             )}
                         />
+                        <Route path="/users" component={FindPeople} />
                     </div>
                 </BrowserRouter>
-                {/* <Profile
-                    first={this.state.user.first}
-                    last={this.state.user.last}
-                    profile_pic={this.state.user.profile_pic}
-                    showUploader={this.showUploader}
-                    setBio={this.setBio}
-                    bio={this.state.user.bio}
-                /> */}
 
                 {this.state.uploaderVisible && (
                     // Uploader will also need to be passed a method to be able to close itself ;)

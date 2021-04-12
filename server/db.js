@@ -44,6 +44,12 @@ module.exports.updateBio = function (bio, id) {
     );
 };
 
+//Queries for finding and befriending other Profiles
+
+module.exports.getNewUsers = function () {
+    return db.query("SELECT * FROM users ORDER BY id DESC LIMIT 3;");
+};
+
 //Queries for email reset
 
 module.exports.resetInsert = function (email, code) {
