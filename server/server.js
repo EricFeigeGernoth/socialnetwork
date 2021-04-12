@@ -18,6 +18,7 @@ const {
     updateProfilePic,
     updateBio,
     getNewUsers,
+    getUserList,
 } = require("./db.js");
 const { sendEmail } = require("./ses.js");
 
@@ -295,6 +296,18 @@ app.get("/users", function (req, res) {
         console.log("users route getting nEwest Users", data.rows);
         return res.json(data.rows);
     });
+});
+
+app.get("/users/:query", function (req, res) {
+    console.log("req.params.query", req.params.query);
+    getUserList(req.params.query)
+        .then((data) => {
+            console.log("query data", data.rows);
+            return res.json(data.rows);
+        })
+        .catch((err) => {
+            console.log("error query business: ", err);
+        });
 });
 
 // Concerning other USERSConcerning other USERSConcerning other USERSConcerning other USERSConcerning other USERSConcerning other USERS

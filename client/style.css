@@ -42,3 +42,9 @@ body {
     flex-direction: row;
     justify-content: space-between;
 }
+
+#membersProfile {
+    height: 100px;
+    width: 100px;
+    background-color: aqua;
+}

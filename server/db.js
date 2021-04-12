@@ -50,6 +50,10 @@ module.exports.getNewUsers = function () {
     return db.query("SELECT * FROM users ORDER BY id DESC LIMIT 3;");
 };
 
+module.exports.getUserList = function (val) {
+    return db.query(`SELECT * FROM users WHERE first ILIKE $1;`, [val + "%"]);
+};
+
 //Queries for email reset
 
 module.exports.resetInsert = function (email, code) {
