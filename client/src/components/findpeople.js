@@ -11,22 +11,19 @@ export default function FindPeople() {
         console.log("I am in mounting");
         let abort = false;
         axios.get("/users").then((data) => {
-            console.log(data);
+            console.log("data", data);
             setMembers(data);
-        }, []);
-        // const { data } = await axios.get("/users");
-        // console.log("data: ", data);
-        // if (!abort) {
-        //     // if block runs if "abort" is false
-        //     setCountries(data);
-        // }
-    });
+            console.log("members", members);
+            // console.log("member", member);
+        });
+    }, []);
 
     return (
         <div>
             <h1>Find People</h1>
             <div>
                 {members.map((member) => {
+                    console.log(member);
                     <div className="membersProfile" key={member.id}>
                         {member.first} {member.last}
                     </div>;
