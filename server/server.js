@@ -292,7 +292,8 @@ app.get("/user/:id.json", function (req, res) {
 app.get("/users", function (req, res) {
     getNewUsers().then((data) => {
         console.log(data);
-        return res.json(data.rows[0]);
+        console.log("users route getting nEwest Users", data.rows);
+        return res.json(data.rows);
     });
 });
 
