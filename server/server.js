@@ -19,6 +19,9 @@ const {
     updateBio,
     getNewUsers,
     getUserList,
+    getFriendshipStatus,
+    updateFriendStatus,
+    InsertFriendshipStatus,
 } = require("./db.js");
 const { sendEmail } = require("./ses.js");
 
@@ -310,6 +313,50 @@ app.get("/users/:query", function (req, res) {
         });
 });
 
+app.get("/friendship/:otherId", function (req, res) {
+    console.log("Hellllllllllllo");
+    console.log("req.params.otherId", req.params.otherId);
+    let id = req.session.userId;
+    getFriendshipStatus(id, req.params.otherId)
+        .then((result) => {
+            console.log("Result Route from friendshipOtherId", result.rows[0]);
+            if (result.rows == 0) {
+                console.log("nulllll");
+                return res.json({ noFriends: true });
+            } else if (result.rows[0].accepted == true) {
+                res.json({ friends: true });
+            } else if (id == result.rows[0].sender_id) {
+                console.log("yeah I am here");
+                res.json({ cancelAsk: true });
+            } else if (id != result.rows[0].sender_id) {
+                res.json({ accept: true });
+            }
+        })
+        .catch((err) => {
+            console.log("error friendshipstatus business: ", err);
+        });
+});
+
+app.post(`/handlefriends/:otherId/:button`, function (req, res) {
+    console.log("handlefriends req.params", req.params);
+    console.log(req.params.otherId);
+    console.log(req.params.button);
+    let id = req.session.userId;
+    if (req.params.button == "Add as Friend") {
+        console.log("adding me friendo");
+
+        InsertFriendshipStatus(id, req.params.otherId).then((result) => {
+            console.log("insertFriendship    ", result);
+            return res.json(result.rows[0]);
+        });
+    } else if (req.params.button == "Accept Friend Request") {
+        updateFriendStatus(id, req.params.otherId).then((result) => {
+            console.log("Have I accepted?");
+            console.log("update", result);
+            res.json({ friends: true });
+        });
+    }
+});
 // Concerning other USERSConcerning other USERSConcerning other USERSConcerning other USERSConcerning other USERSConcerning other USERS
 //NEVER delete or you will see nothing
 app.get("*", function (req, res) {

@@ -19,6 +19,11 @@ export default class OtherProfile extends React.Component {
                 this.setState(resp.data);
                 console.log("after post, ", this.state);
                 console.log("this.state.resp", this.state);
+                console.log("this.state.id", this.state.id);
+                console.log(
+                    "this.props.match.params.id",
+                    this.props.match.params.id
+                );
             }
         });
         // // const { data } = axios.get(`/user/${this.props.match.params.id}.json`);
@@ -40,7 +45,7 @@ export default class OtherProfile extends React.Component {
                     id="profilepicture"
                     src={this.state.profile_pic || "defaultuser.png"}
                 />
-                <FriendButton id={this.state.id} />
+                <FriendButton otherId={this.props.match.params.id} />
             </div>
         );
     }

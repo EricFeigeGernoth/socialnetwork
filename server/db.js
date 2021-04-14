@@ -54,6 +54,31 @@ module.exports.getUserList = function (val) {
     return db.query(`SELECT * FROM users WHERE first ILIKE $1;`, [val + "%"]);
 };
 
+module.exports.getFriendshipStatus = function (id, otherId) {
+    console.log("in FriendshipStatus");
+    return db.query(
+        `SELECT * FROM friendships WHERE (sender_id = $1 AND recipient_id = $2) OR (sender_id = $2 AND recipient_id = $1);`,
+        [id, otherId]
+    );
+};
+module.exports.InsertFriendshipStatus = function (id, otherId) {
+    console.log("in FriendshipStatus");
+    return db.query(
+        `INSERT INTO friendships (sender_id, recipient_id) VALUES ($1, $2) RETURNING sender_id, recipient_id;`,
+        [id, otherId]
+    );
+};
+
+module.exports.updateFriendStatus = function (id, otherId) {
+    console.log("in FriendshipStatus");
+    return db.query(
+        `UPDATE friendships 
+        SET accepted=true 
+        WHERE (sender_id = $1 AND recipient_id = $2) OR (sender_id = $2 AND recipient_id = $1) 
+        RETURNING accepted, sender_id,recipient_id;`,
+        [id, otherId]
+    );
+};
 //Queries for email reset
 
 module.exports.resetInsert = function (email, code) {
