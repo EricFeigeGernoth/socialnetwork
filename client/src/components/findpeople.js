@@ -18,8 +18,14 @@ export default function FindPeople() {
         let abort = false;
         axios.get(`/users/${query}`).then((result) => {
             console.log(result.data);
-            setMembers(result.data);
+            if (!abort) {
+                setMembers(result.data);
+            }
         });
+        return () => {
+            // cleanup function
+            abort = true;
+        };
     }, [query]);
 
     useEffect(() => {

@@ -79,6 +79,8 @@ export class App extends Component {
             <section id={"app"}>
                 <div className="head">
                     <Logo />
+                    <a href="/findusers">To finding Friends</a>
+                    <a href="/">To own Profile</a>
                     <ProfilePic
                         first={this.state.user.first}
                         last={this.state.user.last}
