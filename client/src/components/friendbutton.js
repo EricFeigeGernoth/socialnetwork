@@ -33,6 +33,8 @@ export default function FriendButton(props) {
                 if (result.data.friends) {
                     console.log("We are friends");
                     setButtons("Would you like to end your friendship!");
+                } else if (result.data.noFriends) {
+                    setButtons("Add as Friend");
                 }
             });
     }

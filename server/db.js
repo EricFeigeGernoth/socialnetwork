@@ -79,6 +79,15 @@ module.exports.updateFriendStatus = function (id, otherId) {
         [id, otherId]
     );
 };
+
+module.exports.DeleteFriendshipStatus = function (id, otherId) {
+    console.log("in FriendshipStatus");
+    return db.query(
+        `DELETE FROM friendships 
+        WHERE (sender_id = $1 AND recipient_id = $2) OR (sender_id = $2 AND recipient_id = $1) RETURNING sender_id, recipient_id;`,
+        [id, otherId]
+    );
+};
 //Queries for email reset
 
 module.exports.resetInsert = function (email, code) {

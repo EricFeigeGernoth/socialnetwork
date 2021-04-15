@@ -22,6 +22,7 @@ const {
     getFriendshipStatus,
     updateFriendStatus,
     InsertFriendshipStatus,
+    DeleteFriendshipStatus,
 } = require("./db.js");
 const { sendEmail } = require("./ses.js");
 
@@ -354,6 +355,15 @@ app.post(`/handlefriends/:otherId/:button`, function (req, res) {
             console.log("Have I accepted?");
             console.log("update", result);
             res.json({ friends: true });
+        });
+    } else if (
+        req.params.button == "Would you like to end your friendship!" ||
+        req.params.button == "Cancel Friend Request"
+    ) {
+        console.log("I am in cancel route");
+        DeleteFriendshipStatus(id, req.params.otherId).then((result) => {
+            console.log(result);
+            return res.json({ noFriends: true });
         });
     }
 });
