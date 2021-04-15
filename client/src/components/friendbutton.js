@@ -21,7 +21,7 @@ export default function FriendButton(props) {
                 setButtons("Would you like to end your friendship!");
             }
         });
-    });
+    }, []);
 
     function handleChange(e) {
         console.log("I clicked the button");
@@ -35,6 +35,10 @@ export default function FriendButton(props) {
                     setButtons("Would you like to end your friendship!");
                 } else if (result.data.noFriends) {
                     setButtons("Add as Friend");
+                } else if (result.data.cancelAsk) {
+                    setButtons("Cancel Friend Request?");
+                } else if (result.data.accept) {
+                    setButtons("Accept Friend Request?");
                 }
             });
     }

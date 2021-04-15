@@ -348,7 +348,12 @@ app.post(`/handlefriends/:otherId/:button`, function (req, res) {
 
         InsertFriendshipStatus(id, req.params.otherId).then((result) => {
             console.log("insertFriendship    ", result);
-            return res.json(result.rows[0]);
+            if (id == result.rows[0].sender_id) {
+                console.log("yeah I am here");
+                return res.json({ cancelAsk: true });
+            } else if (id != result.rows[0].sender_id) {
+                return res.json({ accept: true });
+            }
         });
     } else if (req.params.button == "Accept Friend Request") {
         updateFriendStatus(id, req.params.otherId).then((result) => {
