@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 // import Registration from "./registration";
 import Welcome from "./welcome";
 import { App } from "./app";
+import { init } from "./socket";
 //Redux
 import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
@@ -21,6 +22,7 @@ let elem;
 if (location.pathname === "/welcome") {
     elem = <Welcome />;
 } else {
+    init(store);
     elem = (
         <Provider store={store}>
             <App />

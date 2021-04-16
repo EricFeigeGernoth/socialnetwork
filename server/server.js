@@ -1,5 +1,11 @@
 const express = require("express");
 const app = express();
+const server = require("http").Server(app);
+const io = require("socket.io")(server, {
+    allowRequest: (req, callback) =>
+        callback(null, req.headers.referer.startsWith("http://localhost:3000")),
+});
+
 const compression = require("compression");
 const path = require("path");
 const csurf = require("csurf");
@@ -23,6 +29,7 @@ const {
     updateFriendStatus,
     InsertFriendshipStatus,
     DeleteFriendshipStatus,
+    getWannabeeFriends,
 } = require("./db.js");
 const { sendEmail } = require("./ses.js");
 
@@ -57,12 +64,22 @@ app.use(express.urlencoded({ extendend: false }));
 app.use(express.static(path.join(__dirname, "..", "client", "public")));
 app.use(express.json());
 
-app.use(
-    cookieSession({
-        secret: `carolingian Renaissance`,
-        maxAge: `1000 * 60 * 60 * 24 * 14`,
-    })
-);
+// app.use(
+//     cookieSession({
+//         secret: `carolingian Renaissance`,
+//         maxAge: `1000 * 60 * 60 * 24 * 14`,
+//     })
+// );
+const cookieSessionMiddleware = cookieSession({
+    secret: `I'm always angry.`,
+    maxAge: 1000 * 60 * 60 * 24 * 90,
+});
+
+app.use(cookieSessionMiddleware);
+io.use(function (socket, next) {
+    cookieSessionMiddleware(socket.request, socket.request.res, next);
+});
+
 app.use(csurf());
 app.use(function (req, res, next) {
     res.cookie("mytoken", req.csrfToken());
@@ -223,7 +240,7 @@ app.get("/user", function (req, res) {
     console.log("Mounting ID Profile");
     console.log("!!!!user route session.userId", req.session.userId);
     getUserProfile(req.session.userId).then((resp) => {
-        console.log("resp from user:    ", resp);
+        // console.log("resp from user:    ", resp);
         return res.json(resp.rows[0]);
     });
 });
@@ -296,7 +313,7 @@ app.get("/user/:id.json", function (req, res) {
 
 app.get("/users", function (req, res) {
     getNewUsers().then((data) => {
-        console.log(data);
+        // console.log(data);
         console.log("users route getting nEwest Users", data.rows);
         return res.json(data.rows);
     });
@@ -372,6 +389,19 @@ app.post(`/handlefriends/:otherId/:button`, function (req, res) {
         });
     }
 });
+
+app.get("/wannabees", function (req, res) {
+    let id = req.session.userId;
+    console.log("I am in friends-wannabees");
+    getWannabeeFriends(id)
+        .then((result) => {
+            console.log("friends-wannabees", result.rows);
+            return res.json(result.rows);
+        })
+        .catch((err) => {
+            console.log("error get friends-wannabees: ", err);
+        });
+});
 // Concerning other USERSConcerning other USERSConcerning other USERSConcerning other USERSConcerning other USERSConcerning other USERS
 //NEVER delete or you will see nothing
 app.get("*", function (req, res) {
@@ -382,6 +412,14 @@ app.get("*", function (req, res) {
     }
 });
 
-app.listen(process.env.PORT || 3001, function () {
+server.listen(process.env.PORT || 3001, function () {
     console.log("I'm listening.");
+});
+
+io.on("connection", (socket) => {
+    console.log(`socket id ${socket.id} is now connected`);
+    if (!socket.request.session.userId) {
+        return socket.disconnect(true);
+    }
+    const userId = socket.request.session.userId;
 });

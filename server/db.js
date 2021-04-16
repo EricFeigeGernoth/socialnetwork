@@ -88,6 +88,20 @@ module.exports.DeleteFriendshipStatus = function (id, otherId) {
         [id, otherId]
     );
 };
+
+module.exports.getWannabeeFriends = function (id) {
+    console.log("I am in db get WannabeeFriends");
+    return db.query(
+        `SELECT users.id, first, last, profile_pic, accepted
+        FROM friendships
+        JOIN users
+        ON (accepted = false AND recipient_id = $1 AND sender_id = users.id)
+        OR (accepted = true AND recipient_id = $1 AND sender_id = users.id)
+        OR (accepted = true AND sender_id = $1 AND recipient_id = users.id)`,
+        [id]
+    );
+};
+
 //Queries for email reset
 
 module.exports.resetInsert = function (email, code) {

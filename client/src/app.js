@@ -11,6 +11,7 @@ import { Uploader } from "./components/uploader.js";
 import Profile from "./components/profile.js";
 import OtherProfile from "./components/otherprofile";
 import FindPeople from "./components/findpeople";
+import Friends from "./components/friends";
 
 export class App extends Component {
     constructor(props) {
@@ -81,6 +82,7 @@ export class App extends Component {
                     <Logo />
                     <a href="/findusers">To finding Friends</a>
                     <a href="/">To own Profile</a>
+                    <a href="/friends">FRIENDS</a>
                     <ProfilePic
                         first={this.state.user.first}
                         last={this.state.user.last}
@@ -119,6 +121,7 @@ export class App extends Component {
                             )}
                         />
                         <Route path="/findusers" component={FindPeople} />
+                        <Route path="/friends" component={Friends} />
                     </div>
                 </BrowserRouter>
 
