@@ -12,6 +12,7 @@ import Profile from "./components/profile.js";
 import OtherProfile from "./components/otherprofile";
 import FindPeople from "./components/findpeople";
 import Friends from "./components/friends";
+import Chat from "./components/chat";
 
 export class App extends Component {
     constructor(props) {
@@ -83,6 +84,7 @@ export class App extends Component {
                     <a href="/findusers">To finding Friends</a>
                     <a href="/">To own Profile</a>
                     <a href="/friends">FRIENDS</a>
+                    <a href="/chat">Chat</a>
                     <ProfilePic
                         first={this.state.user.first}
                         last={this.state.user.last}
@@ -122,6 +124,7 @@ export class App extends Component {
                         />
                         <Route path="/findusers" component={FindPeople} />
                         <Route path="/friends" component={Friends} />
+                        <Route path="/chat" component={Chat} />
                     </div>
                 </BrowserRouter>
 

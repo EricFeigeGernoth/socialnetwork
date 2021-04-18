@@ -41,3 +41,17 @@ export function unfriend(otherId) {
         };
     });
 }
+
+export function newMessage(msg) {
+    return {
+        type: "NEW_MESSAGE",
+        newMessage: msg,
+    };
+}
+
+export function tenMessages(msgs) {
+    return {
+        type: "TEN_MESSAGES",
+        tenMessages: msgs,
+    };
+}

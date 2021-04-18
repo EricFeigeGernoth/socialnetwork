@@ -25,23 +25,6 @@ export default function Friends() {
         dispatch(receiveFriendsWannabes());
     }, []);
 
-    function handleFriends() {
-        console.log("I clicked the button");
-        // dispatch(unfriend()).then((data) => {
-        //     console.log("friends data", data);
-        //     console.log("friendship ended");
-        // });
-    }
-    // function handleWannabees() {
-    //     console.log("I clicked the button");
-    //     console.log("vaule", wannabee.id);
-
-    //     // dispatch(acceptFriend()).then((data) => {
-    //     //     console.log("wannabee data", data);
-    //     //     console.log("Friendship accepted");
-    //     // });
-    // }
-
     console.log("1friends", friends);
     console.log("1wannabees", wannabees);
     return (

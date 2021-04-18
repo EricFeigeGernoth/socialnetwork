@@ -37,5 +37,17 @@ export default function (state = {}, action) {
             }),
         };
     }
+    if (action.type == "NEW_MESSAGE") {
+        state = {
+            ...state,
+            newMessages: [action.newMessage, state.newMessages],
+        };
+    }
+    if (action.type == "TEN_MESSAGES") {
+        state = {
+            ...state,
+            newMessages: action.tenMessages,
+        };
+    }
     return state;
 }

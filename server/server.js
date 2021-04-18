@@ -30,12 +30,16 @@ const {
     InsertFriendshipStatus,
     DeleteFriendshipStatus,
     getWannabeeFriends,
+    InsertNewChatComment,
+    SelectComment,
+    getLastTenMsgs,
 } = require("./db.js");
 const { sendEmail } = require("./ses.js");
 
 //MULTER//** Do not touch this code **//
 const multer = require("multer");
 const uidSafe = require("uid-safe");
+const { json } = require("express");
 
 const diskStorage = multer.diskStorage({
     destination: function (req, file, callback) {
@@ -441,4 +445,49 @@ io.on("connection", (socket) => {
         return socket.disconnect(true);
     }
     const userId = socket.request.session.userId;
+    console.log("Before getLastTenMsgs");
+    getLastTenMsgs().then(({ rows }) => {
+        console.log("tell me the comments", rows);
+        io.sockets.emit("mostRecentMsgs", rows.reverse());
+    });
+
+    socket.on("My amazing chat message", (newMsg) => {
+        console.log(
+            "This message is coming in from chat.js component: ",
+            newMsg
+        );
+        console.log("user who sent that new msg just now is: ", userId);
+
+        InsertNewChatComment(userId, newMsg)
+            .then((result) => {
+                console.log(result.rows);
+                console.log(result.rows[0].id);
+                SelectComment(result.rows[0].id)
+                    .then((result) => {
+                        console.log("SelectComment", result.rows[0]);
+                        // let infoObj = {
+                        //     first: result.rows[0].first,
+                        //     last: result.rows[0].last,
+                        //     profile_pic: result.rows[0].profile_pic,
+                        //     message: result.rows[0].message,
+                        //     created_at: result.rows[0].created_at,
+                        //     id: result.rows[0].id,
+                        // };
+                        // console.log(result.rows[0]);
+                        let msgInfo = JSON.stringify(result.rows[0]);
+                        io.sockets.emit("addChatMsg", msgInfo);
+                    })
+                    .catch((err) => {
+                        console.log("error select chat Comment: ", err);
+                    });
+            })
+            .catch((err) => {
+                console.log("error inser chat Comments: ", err);
+            });
+
+        // 1. do a db query to store the new chat message into the chat table!!
+        // 2. also do a db query to get info about the user (first name, last name, img) - will probably need to be a JOIN
+        // once you have your chat object, you'll want to EMIT it to EVERYONE so they can see it immediately.
+        // io.sockets.emit("addChatMsg", newMsg);
+    });
 });

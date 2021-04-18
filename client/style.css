@@ -48,3 +48,14 @@ body {
     width: 100px;
     background-color: aqua;
 }
+
+/* chat */
+
+.chat-messages-container {
+    height: 300px;
+
+    width: 60%;
+    border: black 2px solid;
+    overflow-y: scroll;
+    background-color: aqua;
+}

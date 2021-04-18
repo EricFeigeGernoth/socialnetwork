@@ -102,6 +102,42 @@ module.exports.getWannabeeFriends = function (id) {
     );
 };
 
+// CHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHAT
+// CHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHAT
+// CHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHAT
+// CHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHAT
+// CHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHAT
+
+module.exports.InsertNewChatComment = function (userId, msg) {
+    console.log("in InsertNewChatComment");
+    return db.query(
+        `INSERT INTO chatcomments (sender_id, message ) VALUES ($1, $2) RETURNING id, sender_id, message;`,
+        [userId, msg]
+    );
+};
+
+module.exports.SelectComment = function (commentID) {
+    console.log("in InsertNewChatComment");
+    return db.query(
+        `SELECT users.first, users.last, users.profile_pic, 
+        chatcomments.message, chatcomments.id, chatcomments.sender_id, 
+        chatcomments.created_at FROM users 
+        FULL OUTER JOIN chatcomments ON users.id = chatcomments.sender_id 
+        WHERE chatcomments.id = $1  `,
+        [commentID]
+    );
+};
+
+module.exports.getLastTenMsgs = function () {
+    return db.query(
+        `SELECT users.first, users.last, users.profile_pic, chatcomments.message, 
+        chatcomments.id, chatcomments.sender_id, chatcomments.created_at FROM users 
+        JOIN chatcomments ON users.id = chatcomments.sender_id 
+        ORDER BY created_at DESC
+        LIMIT 10  `
+    );
+};
+
 //Queries for email reset
 
 module.exports.resetInsert = function (email, code) {
