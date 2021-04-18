@@ -19,11 +19,25 @@ export function receiveFriendsWannabes() {
         });
 }
 
-export async function acceptFriend() {
-    const { data } = await axios.post();
-    return {
-        type: "ACCEPT_FRIEND",
-    };
+export function acceptFriend(otherId) {
+    console.log("otherId", otherId);
+    return axios.post(`/acceptfriends/${otherId}`).then((result) => {
+        console.log("hello", result.data[0]);
+        return {
+            type: "ACCEPT_FRIEND",
+            friendaccepted: result.data[0],
+        };
+    });
 }
 
-export function unfriend() {}
+export function unfriend(otherId) {
+    console.log("otherId", otherId);
+
+    return axios.post(`/unfriend/${otherId}`).then((result) => {
+        console.log("hello", result.data[0]);
+        return {
+            type: "DELETE_FRIEND",
+            frienddeleted: result.data[0],
+        };
+    });
+}

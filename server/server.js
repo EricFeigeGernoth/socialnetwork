@@ -402,6 +402,25 @@ app.get("/wannabees", function (req, res) {
             console.log("error get friends-wannabees: ", err);
         });
 });
+
+app.post(`/acceptfriends/:otherId`, function (req, res) {
+    console.log("acceptfriend route", req.params.otherId);
+    let id = req.session.userId;
+    updateFriendStatus(id, req.params.otherId).then((result) => {
+        console.log("Have I accepted?");
+        console.log("update", result.rows);
+        res.json(result.rows);
+    });
+});
+app.post(`/unfriend/:otherId`, function (req, res) {
+    console.log("in unfriend route");
+    console.log("unfriend route", req.params.otherId);
+    let id = req.session.userId;
+    DeleteFriendshipStatus(id, req.params.otherId).then((result) => {
+        console.log("update", result.rows);
+        return res.json(result.rows);
+    });
+});
 // Concerning other USERSConcerning other USERSConcerning other USERSConcerning other USERSConcerning other USERSConcerning other USERS
 //NEVER delete or you will see nothing
 app.get("*", function (req, res) {

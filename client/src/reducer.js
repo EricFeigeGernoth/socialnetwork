@@ -7,5 +7,35 @@ export default function (state = {}, action) {
             friendships: action.friendships,
         };
     }
+
+    if (action.type == "ACCEPT_FRIEND") {
+        console.log("action.friendaccepted", action.friendaccepted);
+        state = {
+            ...state,
+            friendships: state.friendships.map((user) => {
+                if (user.id == action.friendaccepted.sender_id) {
+                    return {
+                        ...user,
+                        accepted: true,
+                    };
+                } else {
+                    return user;
+                }
+            }),
+        };
+    }
+    if (action.type == "DELETE_FRIEND") {
+        console.log("action.frienddeleted", action.frienddeleted);
+        state = {
+            ...state,
+            friendships: state.friendships.filter((user) => {
+                console.log("user.id", user.id);
+
+                if (user.id != action.frienddeleted.sender_id) {
+                    return { ...user };
+                }
+            }),
+        };
+    }
     return state;
 }
