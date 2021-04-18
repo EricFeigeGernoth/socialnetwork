@@ -40,7 +40,7 @@ export default function (state = {}, action) {
     if (action.type == "NEW_MESSAGE") {
         state = {
             ...state,
-            newMessages: [action.newMessage, state.newMessages],
+            newMessages: [...state.newMessages, action.newMessage],
         };
     }
     if (action.type == "TEN_MESSAGES") {
