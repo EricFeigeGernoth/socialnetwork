@@ -58,6 +58,7 @@ export default function (state = {}, action) {
         };
     }
     if (action.type == "USER_JOINED") {
+        console.log("FINE LOOKING");
         state = {
             ...state,
             onlineUsers: [...state.onlineUsers, action.newUser],

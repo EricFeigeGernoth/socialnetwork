@@ -5,10 +5,15 @@ export default function Profile(props) {
     // All the props need to be passed down from <App />
     return (
         <section id={"main_profile"}>
-            <ProfilePic
+            <img
+                id="inProfilePic"
+                src={props.profile_pic || "defaultuser.png"}
+                onClick={() => props.showUploader()}
+            />
+            {/* <ProfilePic
                 profile_pic={props.profile_pic}
                 showUploader={props.showUploader}
-            />
+            /> */}
             <h2>
                 {props.first} {props.last}
             </h2>

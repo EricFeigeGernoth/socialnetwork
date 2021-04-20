@@ -457,35 +457,36 @@ io.on("connection", (socket) => {
 
     const userId = socket.request.session.userId;
 
-    onlineUsers[socket.id] = userId;
-    console.log(`onlineUsers[${socket.id}]`, onlineUsers[socket.id]);
-    console.log("onlineUsers Object", onlineUsers);
-    const collId = Object.values(onlineUsers);
-    console.log("collId", collId);
+    onlineUsers[userId] = socket.id;
 
-    for (var i = 0; i < collId.length; i++) {
-        var count = 0;
-        for (var j = 0; j < collId.length; j++) {
-            if (collId[i] == collId[j]) {
-                count++;
-                if (count >= 2) {
-                    collId.splice(j, 1);
-                }
-            }
-        }
-        count = 0;
-    }
-    console.log("collId", collId);
-    getUsersByIds(collId).then((data) => {
+    // console.log(`onlineUsers[${socket.id}]`, onlineUsers[socket.id]);
+    // console.log("onlineUsers Object", onlineUsers);
+    // const collId = Object.values(onlineUsers);
+    // console.log("collId", collId);
+
+    // for (var i = 0; i < collId.length; i++) {
+    //     var count = 0;
+    //     for (var j = 0; j < collId.length; j++) {
+    //         if (collId[i] == collId[j]) {
+    //             count++;
+    //             if (count >= 2) {
+    //                 collId.splice(j, 1);
+    //             }
+    //         }
+    //     }
+    //     count = 0;
+    // }
+    // console.log("collId", collId);
+    getUsersByIds(Object.keys(onlineUsers)).then((data) => {
         console.log("data collId", data.rows);
-        io.to(socket.id).emit("onlineUsers", data.rows);
+        io.sockets.emit("onlineUsers", data.rows);
     });
 
-    getUserProfile(onlineUsers[socket.id]).then((result) => {
-        console.log("UserJoined", result.rows);
-        console.log("Wow in userJoined");
-        socket.broadcast.emit("userJoined", result.rows);
-    });
+    // getUserProfile(onlineUsers[socket.id]).then((result) => {
+    //     console.log("UserJoined", result.rows);
+    //     console.log("Wow in userJoined");
+    //     socket.broadcast.emit("userJoined", result.rows);
+    // });
     // When a new person joins - we have to do two things
     // 1. send a message to just the new person. that message contains a list of everyone currently online
     // 2. send a message to everyone currently online (except the person who just joined).
@@ -550,8 +551,11 @@ io.on("connection", (socket) => {
             });
     });
 
-    // socket.on("disconnect", () => {
-    //     io.sockets.emit("userLeft", onlineUsers[socket.id]);
-    //     // delete onlineUsers[socket.id];
-    // });
+    socket.on("disconnect", () => {
+        delete onlineUsers[userId];
+        getUsersByIds(Object.keys(onlineUsers)).then((data) => {
+            console.log("data collId", data.rows);
+            io.sockets.emit("onlineUsers", data.rows);
+        });
+    });
 });
