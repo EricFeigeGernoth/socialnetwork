@@ -102,6 +102,13 @@ module.exports.getWannabeeFriends = function (id) {
     );
 };
 
+module.exports.getUsersByIds = function (arrayOfIds) {
+    const query =
+        "SELECT id, first, last, profile_pic FROM users WHERE id = ANY($1)";
+    const params = [arrayOfIds];
+    return db.query(query, params);
+};
+
 // CHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHAT
 // CHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHAT
 // CHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHATCHAT

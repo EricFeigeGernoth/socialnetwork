@@ -1,15 +1,17 @@
 import { useEffect, useRef } from "react";
 import { socket } from "../socket";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 export default function Chat() {
     const elemRef = useRef();
     const newMessages = useSelector((state) => state && state.newMessages);
+    const onlineUsers = useSelector((state) => state && state.onlineUsers);
     console.log("newMessage", newMessages);
     if (newMessages != undefined) {
         console.log(newMessages.message);
     }
-
+    console.log("onlineUsers", onlineUsers);
     useEffect(() => {
         elemRef.current.scrollTop =
             elemRef.current.scrollHeight - elemRef.current.clientHeight;
@@ -32,10 +34,14 @@ export default function Chat() {
                     newMessages.map((msg) => {
                         return (
                             <div className="comment" key={msg.id}>
-                                <img
-                                    id="profilepicture"
-                                    src={msg.profile_pic || "defaultuser.png"}
-                                />
+                                <Link to={"/user/" + msg.sender_id}>
+                                    <img
+                                        id="profilepicture"
+                                        src={
+                                            msg.profile_pic || "defaultuser.png"
+                                        }
+                                    />
+                                </Link>
                                 <p>
                                     {msg.first} {msg.last}
                                 </p>
@@ -48,6 +54,28 @@ export default function Chat() {
                 placeholder="Add your message here"
                 onKeyDown={keyCheck}
             ></textarea>
+            <div>
+                <p>Friends online</p>
+                {onlineUsers &&
+                    onlineUsers.map((onUser) => {
+                        return (
+                            <div className="comment" key={onUser.id}>
+                                <Link to={"/user/" + onUser.id}>
+                                    <img
+                                        id="profilepicture"
+                                        src={
+                                            onUser.profile_pic ||
+                                            "defaultuser.png"
+                                        }
+                                    />
+                                </Link>
+                                <p>
+                                    {onUser.first} {onUser.last}
+                                </p>
+                            </div>
+                        );
+                    })}
+            </div>
         </div>
     );
 }

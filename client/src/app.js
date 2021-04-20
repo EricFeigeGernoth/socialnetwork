@@ -30,6 +30,7 @@ export class App extends Component {
         this.hideUploader = this.hideUploader.bind(this);
         this.showUploader = this.showUploader.bind(this);
         this.setBio = this.setBio.bind(this);
+        this.logOut = this.logOut.bind(this);
     }
 
     componentDidMount() {
@@ -76,6 +77,14 @@ export class App extends Component {
         this.setState({ uploaderVisible: false });
     }
 
+    logOut() {
+        console.log("this function");
+        axios.get("logout").then(() => {
+            console.log("I am in logOut");
+            // location.replace("/");
+        });
+    }
+
     render() {
         return (
             <section id={"app"}>
@@ -85,6 +94,9 @@ export class App extends Component {
                     <a href="/">To own Profile</a>
                     <a href="/friends">FRIENDS</a>
                     <a href="/chat">Chat</a>
+                    <a onClick={this.logOut} href="/logout">
+                        Log Out
+                    </a>
                     <ProfilePic
                         first={this.state.user.first}
                         last={this.state.user.last}

@@ -33,6 +33,7 @@ const {
     InsertNewChatComment,
     SelectComment,
     getLastTenMsgs,
+    getUsersByIds,
 } = require("./db.js");
 const { sendEmail } = require("./ses.js");
 
@@ -282,7 +283,7 @@ app.post("/bioedit", (req, res) => {
     let id = req.session.userId;
     // console.log(id);
     updateBio(bio, id).then((data) => {
-        console.log("updateBio", data);
+        // console.log("updateBio", data);
         res.json(data.rows[0]);
     });
 });
@@ -305,7 +306,7 @@ app.get("/user/:id.json", function (req, res) {
             .then((resp) => {
                 // console.log("resp from user/idjson:    ", resp);
                 console.log("HELEOEOEHOE");
-                console.log("userId important route", resp.rows[0]);
+                // console.log("userId important route", resp.rows[0]);
                 return res.json(resp.rows[0]);
             })
             .catch((err) => {
@@ -327,7 +328,7 @@ app.get("/users/:query", function (req, res) {
     console.log("req.params.query", req.params.query);
     getUserList(req.params.query)
         .then((data) => {
-            console.log("query data", data.rows);
+            // console.log("query data", data.rows);
             return res.json(data.rows);
         })
         .catch((err) => {
@@ -378,7 +379,7 @@ app.post(`/handlefriends/:otherId/:button`, function (req, res) {
         });
     } else if (req.params.button == "Accept Friend Request") {
         updateFriendStatus(id, req.params.otherId).then((result) => {
-            console.log("Have I accepted?");
+            // console.log("Have I accepted?");
             console.log("update", result);
             res.json({ friends: true });
         });
@@ -399,7 +400,7 @@ app.get("/wannabees", function (req, res) {
     console.log("I am in friends-wannabees");
     getWannabeeFriends(id)
         .then((result) => {
-            console.log("friends-wannabees", result.rows);
+            // console.log("friends-wannabees", result.rows);
             return res.json(result.rows);
         })
         .catch((err) => {
@@ -411,20 +412,28 @@ app.post(`/acceptfriends/:otherId`, function (req, res) {
     console.log("acceptfriend route", req.params.otherId);
     let id = req.session.userId;
     updateFriendStatus(id, req.params.otherId).then((result) => {
-        console.log("Have I accepted?");
-        console.log("update", result.rows);
+        // console.log("Have I accepted?");
+        // console.log("update", result.rows);
         res.json(result.rows);
     });
 });
 app.post(`/unfriend/:otherId`, function (req, res) {
-    console.log("in unfriend route");
-    console.log("unfriend route", req.params.otherId);
+    // console.log("in unfriend route");
+    // console.log("unfriend route", req.params.otherId);
     let id = req.session.userId;
     DeleteFriendshipStatus(id, req.params.otherId).then((result) => {
-        console.log("update", result.rows);
+        // console.log("update", result.rows);
         return res.json(result.rows);
     });
 });
+
+app.get(`/logout`, function (req, res) {
+    req.session.userId = null;
+    // console.log("userId", req.session.userId);
+    // console.log("UserId resetted");
+    res.redirect("/login");
+});
+
 // Concerning other USERSConcerning other USERSConcerning other USERSConcerning other USERSConcerning other USERSConcerning other USERS
 //NEVER delete or you will see nothing
 app.get("*", function (req, res) {
@@ -439,15 +448,72 @@ server.listen(process.env.PORT || 3001, function () {
     console.log("I'm listening.");
 });
 
+let onlineUsers = {};
 io.on("connection", (socket) => {
     console.log(`socket id ${socket.id} is now connected`);
     if (!socket.request.session.userId) {
         return socket.disconnect(true);
     }
+
     const userId = socket.request.session.userId;
-    console.log("Before getLastTenMsgs");
+
+    onlineUsers[socket.id] = userId;
+    console.log(`onlineUsers[${socket.id}]`, onlineUsers[socket.id]);
+    console.log("onlineUsers Object", onlineUsers);
+    const collId = Object.values(onlineUsers);
+    console.log("collId", collId);
+
+    for (var i = 0; i < collId.length; i++) {
+        var count = 0;
+        for (var j = 0; j < collId.length; j++) {
+            if (collId[i] == collId[j]) {
+                count++;
+                if (count >= 2) {
+                    collId.splice(j, 1);
+                }
+            }
+        }
+        count = 0;
+    }
+    console.log("collId", collId);
+    getUsersByIds(collId).then((data) => {
+        console.log("data collId", data.rows);
+        io.sockets.to(socket.id).emit("onlineUsers", data.rows);
+    });
+    // When a new person joins - we have to do two things
+    // 1. send a message to just the new person. that message contains a list of everyone currently online
+    // 2. send a message to everyone currently online (except the person who just joined).
+    // this message contains information just about the new person who joined
+
+    /*
+        1. onlineUsers 
+        "onlineUsers" event is the socket event we emit when a new person joins 
+        and specifically this event will be emitted to JUST the new person who joined 
+
+        WARNING! Be mindful that if a person has our SN open in multiple tabs, 
+        they will appear multiple times in the onlineUsers object. 
+        If we're not careful, that person will then be rendered multiple times onscreen
+        Before you do any db stuff, make sure you're filtering out all the users who appear 
+        multiple times in the onlineUsers object!
+
+        We need to turn the onlineUsers object into an array of all the users currently online.
+        This array will be an array of objects, where each object represents a specific users.
+        Each of these objects will contain a user's name, profile pic, id, anything else you want to render
+
+        1. get the userIds out of the onlineUsers object
+        const userIds = Object.values(onlineUsers);
+        "userIds" will be an array of ids
+
+        2. turn that array of ids into an array of objects, where each object represents a specific user 
+        You can use the getUsersByIds query here ;) 
+
+        3. once we have that array of objects, we can emit it to just the user who joined
+
+        */
+
+    // console.log("Before getLastTenMsgs");
     getLastTenMsgs().then(({ rows }) => {
-        console.log("tell me the comments", rows);
+        // console.log("tell me the comments", rows);
         io.sockets.emit("mostRecentMsgs", rows.reverse());
     });
 
@@ -460,20 +526,12 @@ io.on("connection", (socket) => {
 
         InsertNewChatComment(userId, newMsg)
             .then((result) => {
-                console.log(result.rows);
-                console.log(result.rows[0].id);
+                // console.log(result.rows);
+                // console.log(result.rows[0].id);
                 SelectComment(result.rows[0].id)
                     .then((result) => {
                         console.log("SelectComment", result.rows[0]);
-                        // let infoObj = {
-                        //     first: result.rows[0].first,
-                        //     last: result.rows[0].last,
-                        //     profile_pic: result.rows[0].profile_pic,
-                        //     message: result.rows[0].message,
-                        //     created_at: result.rows[0].created_at,
-                        //     id: result.rows[0].id,
-                        // };
-                        // console.log(result.rows[0]);
+
                         let msgInfo = JSON.stringify(result.rows[0]);
                         io.sockets.emit("addChatMsg", msgInfo);
                     })

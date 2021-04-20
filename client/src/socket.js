@@ -1,7 +1,5 @@
 import io from "socket.io-client";
-import { newMessage, tenMessages } from "./actions";
-
-// import { chatMessages, chatMessage } from "./actions";
+import { newMessage, tenMessages, onlineUsers } from "./actions";
 
 export let socket;
 
@@ -16,6 +14,11 @@ export const init = (store) => {
             let parsedMSG = JSON.parse(msg);
             console.log("parsedMSG", parsedMSG);
             store.dispatch(newMessage(parsedMSG));
+        });
+
+        socket.on("onlineUsers", (users) => {
+            console.log("onlineUsers", users);
+            store.dispatch(onlineUsers(users));
         });
         // socket.on("chatMessages", (msgs) => store.dispatch(chatMessages(msgs)));
 

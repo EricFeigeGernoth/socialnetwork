@@ -49,5 +49,11 @@ export default function (state = {}, action) {
             newMessages: action.tenMessages,
         };
     }
+    if (action.type == "ONLINE_USERS") {
+        state = {
+            ...state,
+            onlineUsers: action.onlineUsers,
+        };
+    }
     return state;
 }

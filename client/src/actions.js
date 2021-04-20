@@ -55,3 +55,10 @@ export function tenMessages(msgs) {
         tenMessages: msgs,
     };
 }
+
+export function onlineUsers(users) {
+    return {
+        type: "ONLINE_USERS",
+        onlineUsers: users,
+    };
+}
