@@ -1,5 +1,7 @@
 // src/reducer.js
 
+import { onlineUsers } from "./actions";
+
 export default function (state = {}, action) {
     if (action.type == "RECEIVE_FRIENDS_WANNABES") {
         state = {
@@ -53,6 +55,20 @@ export default function (state = {}, action) {
         state = {
             ...state,
             onlineUsers: action.onlineUsers,
+        };
+    }
+    if (action.type == "USER_JOINED") {
+        state = {
+            ...state,
+            onlineUsers: [...state.onlineUsers, action.newUser],
+        };
+    }
+    if (action.type == "USER_LEFT") {
+        state = {
+            ...state,
+            onlineUsers: state.onlineUsers.filter((userLeft) => {
+                userLeft.id != action.onlineUsers;
+            }),
         };
     }
     return state;

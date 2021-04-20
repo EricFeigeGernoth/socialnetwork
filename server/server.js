@@ -478,7 +478,13 @@ io.on("connection", (socket) => {
     console.log("collId", collId);
     getUsersByIds(collId).then((data) => {
         console.log("data collId", data.rows);
-        io.sockets.to(socket.id).emit("onlineUsers", data.rows);
+        io.to(socket.id).emit("onlineUsers", data.rows);
+    });
+
+    getUserProfile(onlineUsers[socket.id]).then((result) => {
+        console.log("UserJoined", result.rows);
+        console.log("Wow in userJoined");
+        socket.broadcast.emit("userJoined", result.rows);
     });
     // When a new person joins - we have to do two things
     // 1. send a message to just the new person. that message contains a list of everyone currently online
@@ -542,10 +548,10 @@ io.on("connection", (socket) => {
             .catch((err) => {
                 console.log("error inser chat Comments: ", err);
             });
-
-        // 1. do a db query to store the new chat message into the chat table!!
-        // 2. also do a db query to get info about the user (first name, last name, img) - will probably need to be a JOIN
-        // once you have your chat object, you'll want to EMIT it to EVERYONE so they can see it immediately.
-        // io.sockets.emit("addChatMsg", newMsg);
     });
+
+    // socket.on("disconnect", () => {
+    //     io.sockets.emit("userLeft", onlineUsers[socket.id]);
+    //     // delete onlineUsers[socket.id];
+    // });
 });

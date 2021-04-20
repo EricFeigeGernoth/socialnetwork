@@ -62,3 +62,17 @@ export function onlineUsers(users) {
         onlineUsers: users,
     };
 }
+
+export function newUser(user) {
+    return {
+        type: "USER_JOINED",
+        newUser: user,
+    };
+}
+
+export function userLeft(left) {
+    return {
+        type: "USER_LEFT",
+        userLeft: left,
+    };
+}
