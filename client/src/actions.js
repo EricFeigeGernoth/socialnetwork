@@ -63,10 +63,10 @@ export function onlineUsers(users) {
     };
 }
 
-export function newUser(user) {
+export function neuerNutzer(users) {
     return {
         type: "USER_JOINED",
-        newUser: user,
+        newUser: users,
     };
 }
 
