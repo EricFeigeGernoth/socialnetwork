@@ -44,15 +44,21 @@ export class Uploader extends Component {
     render() {
         return (
             <div id="uploadsection">
-                <h1>IN the uploader</h1>
-                <input
-                    className="inputImages"
-                    onChange={this.handleChange}
-                    type="file"
-                    name="file"
-                    accept="image/*"
-                ></input>
-                <button onClick={this.upload}>Upload</button>
+                <div className="uploader">
+                    <h1>Upload your Profile Picture</h1>
+                    <div className="uploadBottom">
+                        <input
+                            className="inputImages"
+                            onChange={this.handleChange}
+                            type="file"
+                            name="file"
+                            accept="image/*"
+                        ></input>
+                        <button className="buttonStyling" onClick={this.upload}>
+                            Upload
+                        </button>
+                    </div>
+                </div>
             </div>
         );
     }

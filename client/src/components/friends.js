@@ -28,59 +28,85 @@ export default function Friends() {
     console.log("1friends", friends);
     console.log("1wannabees", wannabees);
     return (
-        <div>
-            <p>Your Friends</p>
-            {friends &&
-                friends.map((friend) => {
-                    return (
-                        <div className="friendsList" key={friend.id}>
-                            <Link to={"/user/" + friend.id}>
-                                <img
-                                    id="profilepicture"
-                                    src={
-                                        friend.profile_pic || "defaultuser.png"
-                                    }
-                                />
-                                <p>
-                                    {friend.first} {friend.last}
-                                </p>
-                            </Link>
-                            <button
-                                onClick={() => dispatch(unfriend(friend.id))}
-                            >
-                                End Friendship
-                            </button>
-                        </div>
-                    );
-                })}
-            ;<p>Your wannabee Friends</p>
-            {wannabees &&
-                wannabees.map((wannabee) => {
-                    return (
-                        <div className="wannabeeList" key={wannabee.id}>
-                            <Link to={"/user/" + wannabee.id}>
-                                <img
-                                    id="profilepicture"
-                                    src={
-                                        wannabee.profile_pic ||
-                                        "defaultuser.png"
-                                    }
-                                />
-                                <p>
-                                    {wannabee.first} {wannabee.last}
-                                </p>
-                            </Link>
-                            <button
-                                onClick={() =>
-                                    dispatch(acceptFriend(wannabee.id))
-                                }
-                            >
-                                Accept Friendshiprequest
-                            </button>
-                        </div>
-                    );
-                })}
-            ;
+        <div className="searchFrameWork">
+            <div className="searchBox">
+                <p className="header3">The friends you made along the way</p>
+                <div className="wannabeeList">
+                    {friends &&
+                        friends.map((friend) => {
+                            return (
+                                <div className="wannabee" key={friend.id}>
+                                    <div>
+                                        <Link to={"/user/" + friend.id}>
+                                            <img
+                                                id="profilepicture"
+                                                src={
+                                                    friend.profile_pic ||
+                                                    "defaultuser.png"
+                                                }
+                                            />
+                                        </Link>
+                                    </div>{" "}
+                                    <div>
+                                        <p className="nameName">
+                                            {friend.first} {friend.last}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <button
+                                            className="buttonStyling2"
+                                            onClick={() =>
+                                                dispatch(unfriend(friend.id))
+                                            }
+                                        >
+                                            End Friendship
+                                        </button>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    ;
+                </div>
+                <p className="header3">New Acquaintances</p>
+                <div className="wannabeeList">
+                    {wannabees &&
+                        wannabees.map((wannabee) => {
+                            return (
+                                <div className="wannabee" key={wannabee.id}>
+                                    <div>
+                                        <Link to={"/user/" + wannabee.id}>
+                                            <img
+                                                id="profilepicture"
+                                                src={
+                                                    wannabee.profile_pic ||
+                                                    "defaultuser.png"
+                                                }
+                                            />
+                                        </Link>
+                                    </div>
+                                    <div>
+                                        <p className="nameName">
+                                            {wannabee.first} {wannabee.last}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <button
+                                            className="buttonStyling2"
+                                            onClick={() =>
+                                                dispatch(
+                                                    acceptFriend(wannabee.id)
+                                                )
+                                            }
+                                        >
+                                            Accept Friendshiprequest
+                                        </button>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                </div>
+                ;
+            </div>
         </div>
     );
 }

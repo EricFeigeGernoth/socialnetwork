@@ -44,28 +44,48 @@ export default class Login extends Component {
 
     render() {
         return (
-            <div>
-                <h1>This is our Login component</h1>
+            <div className="bodyBox">
+                <div className="regLogBox">
+                    <h1 className="header1">Step In</h1>
 
-                {this.state.error && (
-                    <p className="error">oops!!! something went wrong!!</p>
-                )}
-                <input
-                    type="text"
-                    name="email"
-                    placeholder="email"
-                    onChange={(e) => this.handleChange(e)}
-                ></input>
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="password"
-                    onChange={(e) => this.handleChange(e)}
-                ></input>
-                <button onClick={() => this.handleClick()}>login</button>
+                    {this.state.error && (
+                        <p className="error">oops!!! something went wrong!!</p>
+                    )}
+                    <div className="inputFields">
+                        <div className="input">
+                            <input
+                                type="text"
+                                name="email"
+                                placeholder="email"
+                                onChange={(e) => this.handleChange(e)}
+                            ></input>
+                        </div>
+                        <div className="input">
+                            {" "}
+                            <input
+                                type="password"
+                                name="password"
+                                placeholder="password"
+                                onChange={(e) => this.handleChange(e)}
+                            ></input>
+                        </div>
+                        <div className="button">
+                            {" "}
+                            <button onClick={() => this.handleClick()}>
+                                login
+                            </button>
+                        </div>
 
-                <Link to="/">Click to go to Registration</Link>
-                <Link to="/resetpassword">Reset your password</Link>
+                        <Link to="/">
+                            <p className="subtitle">
+                                Click to go to Registration
+                            </p>
+                        </Link>
+                        <Link to="/resetpassword">
+                            <p className="subtitle">Reset your password</p>
+                        </Link>
+                    </div>
+                </div>
             </div>
         );
     }

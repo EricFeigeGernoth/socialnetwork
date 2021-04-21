@@ -40,27 +40,38 @@ export default function FindPeople() {
     }, []);
 
     return (
-        <div>
-            <h1>Find People</h1>
-            <div>
-                <p>Type in your friends and find them</p>
-                <input onChange={handleChange}></input>
+        <div className="searchFrameWork">
+            <div className="searchBox">
+                <h1>Search your Friends</h1>
+                <div>
+                    {/* <p>Type in your friends and find them</p> */}
+                    <input onChange={handleChange}></input>
+                </div>
+                {members.map((member) => {
+                    return (
+                        <div className="membersProfile" key={member.id}>
+                            <div className="findingProfile">
+                                <Link to={"/user/" + member.id}>
+                                    <div className="findingProfileImage">
+                                        <img
+                                            id="profilepicture"
+                                            src={
+                                                member.profile_pic ||
+                                                "defaultuser.png"
+                                            }
+                                        />
+                                    </div>
+                                </Link>
+                                <div>
+                                    <p className="nameName">
+                                        {member.first} {member.last}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    );
+                })}
             </div>
-            {members.map((member) => {
-                return (
-                    <div className="membersProfile" key={member.id}>
-                        <Link to={"/user/" + member.id}>
-                            <img
-                                id="profilepicture"
-                                src={member.profile_pic || "defaultuser.png"}
-                            />
-                            <p>
-                                {member.first} {member.last}
-                            </p>
-                        </Link>
-                    </div>
-                );
-            })}
         </div>
     );
 }

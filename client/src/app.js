@@ -90,12 +90,22 @@ export class App extends Component {
             <section id={"app"}>
                 <div className="head">
                     <Logo />
-                    <a href="/findusers">To finding Friends</a>
-                    <a href="/">To own Profile</a>
-                    <a href="/friends">FRIENDS</a>
-                    <a href="/chat">Chat</a>
+
+                    <a href="/findusers">
+                        {" "}
+                        <p className="subtitle">To finding Friends</p>
+                    </a>
+                    <a href="/">
+                        <p className="subtitle">To own Profile</p>
+                    </a>
+                    <a href="/friends">
+                        <p className="subtitle">FRIENDS</p>
+                    </a>
+                    <a href="/chat">
+                        <p className="subtitle">Chat</p>
+                    </a>
                     <a onClick={this.logOut} href="/logout">
-                        Log Out
+                        <p className="subtitle">Log Out</p>
                     </a>
                     <ProfilePic
                         first={this.state.user.first}

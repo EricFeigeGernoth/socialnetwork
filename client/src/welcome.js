@@ -5,8 +5,6 @@ import ResetPassword from "./resetpassword";
 export default function Welcome() {
     return (
         <div id="welcome">
-            <h1>Welcome to my SN!</h1>
-            <h1>Welcome!</h1>
             <HashRouter>
                 <div>
                     <Route exact path="/" component={Registration} />

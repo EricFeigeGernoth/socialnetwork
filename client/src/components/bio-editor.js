@@ -78,17 +78,30 @@ export class BioEditor extends Component {
                             onChange={this.handleBioChange}
                             defaultValue={this.props.bio}
                         ></textarea>
-                        <button onClick={this.submitBio}>Save</button>
+                        <button
+                            className="buttonStyling"
+                            onClick={this.submitBio}
+                        >
+                            Save
+                        </button>
                     </div>
                 )}
                 {!this.state.edit && !this.state.bioInfo && (
                     <div className="addBio">
-                        <button onClick={this.toggleEditMode}>add Bio</button>
+                        <button
+                            className="buttonStyling"
+                            onClick={this.toggleEditMode}
+                        >
+                            add Bio
+                        </button>
                     </div>
                 )}
                 {!this.state.edit && this.state.bioInfo && (
                     <div className="startEdit">
-                        <button onClick={this.toggleEditMode}>
+                        <button
+                            className="buttonStyling"
+                            onClick={this.toggleEditMode}
+                        >
                             Edit your existing Bio
                         </button>
                     </div>

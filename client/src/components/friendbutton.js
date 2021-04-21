@@ -44,9 +44,10 @@ export default function FriendButton(props) {
     }
 
     return (
-        <div>
-            <p>I am inside of FriendButton</p>
-            <button onClick={(e) => handleChange(e)}>{button}</button>
+        <div className="button">
+            <button className="buttonStyling" onClick={(e) => handleChange(e)}>
+                {button}
+            </button>
         </div>
     );
 }

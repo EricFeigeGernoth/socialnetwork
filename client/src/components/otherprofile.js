@@ -35,18 +35,35 @@ export default class OtherProfile extends React.Component {
     render() {
         console.log("this.state while rendering otherprofile", this.state);
         return (
-            <div>
-                <h1> You are watching a different profile</h1>
-                <h1>
-                    {this.state.first} {this.state.last}
-                </h1>
-                <p> the bio of this person: {this.state.bio}</p>
-                <img
-                    id="profilepicture"
-                    src={this.state.profile_pic || "defaultuser.png"}
-                />
-                <FriendButton otherId={this.props.match.params.id} />
-            </div>
+            <section id={"main_profile"}>
+                <div className="profileBox">
+                    <div className="otherProfile">
+                        <div className="imgContainer">
+                            <img
+                                id="inProfilePic"
+                                src={
+                                    this.state.profile_pic || "defaultuser.png"
+                                }
+                            />
+                        </div>
+
+                        <div>
+                            <h1 className="header3">
+                                {this.state.first} {this.state.last}
+                            </h1>
+                        </div>
+                        <div>
+                            {" "}
+                            <p className="nameName2"> {this.state.bio}</p>
+                        </div>
+                        <div>
+                            <FriendButton
+                                otherId={this.props.match.params.id}
+                            />
+                        </div>
+                    </div>
+                </div>
+            </section>
         );
     }
 }

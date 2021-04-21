@@ -55,38 +55,73 @@ export default class Registration extends Component {
 
     render() {
         return (
-            <div>
-                <h1>This is our registration component</h1>
+            <div className="bodyBox">
+                <div className="regLogBox">
+                    <div>
+                        {" "}
+                        <h1 className="mainHeader">LimBUS</h1>
+                    </div>
 
-                {this.state.error && (
-                    <p className="error">oops!!! something went wrong!!</p>
-                )}
-                <input
-                    type="text"
-                    name="first"
-                    placeholder="first"
-                    onChange={(e) => this.handleChange(e)}
-                ></input>
-                <input
-                    type="text"
-                    name="last"
-                    placeholder="last"
-                    onChange={(e) => this.handleChange(e)}
-                ></input>
-                <input
-                    type="text"
-                    name="email"
-                    placeholder="email"
-                    onChange={(e) => this.handleChange(e)}
-                ></input>
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="password"
-                    onChange={(e) => this.handleChange(e)}
-                ></input>
-                <button onClick={() => this.handleClick()}>register</button>
-                <Link to="/login">Click to go to Login</Link>
+                    <h1 className="header2">
+                        the fastest connection in the underworld
+                    </h1>
+                    <h1 className="header2">
+                        Stay connected with all your friends across hell
+                    </h1>
+
+                    {this.state.error && (
+                        <p className="error">oops!!! something went wrong!!</p>
+                    )}
+                    <div className="inputFields">
+                        <div className="input">
+                            <input
+                                type="text"
+                                name="first"
+                                placeholder="first"
+                                onChange={(e) => this.handleChange(e)}
+                            ></input>
+                        </div>
+                        <div className="input">
+                            {" "}
+                            <input
+                                type="text"
+                                name="last"
+                                placeholder="last"
+                                onChange={(e) => this.handleChange(e)}
+                            ></input>
+                        </div>
+                        <div className="input">
+                            {" "}
+                            <input
+                                type="text"
+                                name="email"
+                                placeholder="email"
+                                onChange={(e) => this.handleChange(e)}
+                            ></input>
+                        </div>
+                        <div className="input">
+                            {" "}
+                            <input
+                                type="password"
+                                name="password"
+                                placeholder="password"
+                                onChange={(e) => this.handleChange(e)}
+                            ></input>
+                        </div>
+                        <div className="button">
+                            {" "}
+                            <button onClick={() => this.handleClick()}>
+                                register
+                            </button>
+                        </div>
+
+                        <Link to="/login">
+                            <p className="subtitle">
+                                Registered already? Step in!
+                            </p>
+                        </Link>
+                    </div>
+                </div>
             </div>
         );
     }
